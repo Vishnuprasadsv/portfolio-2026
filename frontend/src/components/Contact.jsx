@@ -73,7 +73,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-[#ff4d00] uppercase tracking-wider mb-1">Email Me</p>
-                                    <a href="mailto:hello@portfolio.com" className="text-white font-medium hover:text-[#ff4d00] transition-colors">hello@portfolio.com</a>
+                                    <a href="#" className="text-white font-medium hover:text-[#ff4d00] transition-colors">vishnusvprasad@gmail.com</a>
                                 </div>
                             </div>
 
@@ -83,7 +83,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-[#ff4d00] uppercase tracking-wider mb-1">Location</p>
-                                    <p className="text-white font-medium">San Francisco, CA</p>
+                                    <p className="text-white font-medium">Kerala, India</p>
                                 </div>
                             </div>
 
@@ -93,7 +93,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-[#ff4d00] uppercase tracking-wider mb-1">LinkedIn</p>
-                                    <a href="#" className="text-white font-medium hover:text-[#ff4d00] transition-colors">linkedin.com/in/username</a>
+                                    <a href="www.linkedin.com/in/vishnu-prasad-sv" className="text-white font-medium hover:text-[#ff4d00] transition-colors">www.linkedin.com/in/vishnu-prasad-sv</a>
                                 </div>
                             </div>
                         </div>

@@ -41,7 +41,7 @@ const ProjectDetail = () => {
                     alt={project.title}
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
 
                 <div className="absolute top-0 left-0 w-full p-6 md:p-8 z-10">
                     <div className="max-w-7xl mx-auto">

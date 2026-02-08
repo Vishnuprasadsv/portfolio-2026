@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken');
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    const ADMIN_USERNAME = "vishnusvprasad";
-    const ADMIN_PASSWORD = "Galaxy@161199";
+    const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         // Create JWT payload
