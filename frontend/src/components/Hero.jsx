@@ -4,6 +4,7 @@ import { Download, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
+import profile_image from '../assets/profile_photo.jpg'
 
 const Hero = () => {
     const [profile, setProfile] = useState(null);
@@ -46,7 +47,7 @@ const Hero = () => {
             >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
                 <img
-                    src={profile?.profilePhotoUrl || "/src/assets/profile_photo.jpg"}
+                    src={profile?.profilePhotoUrl || profile_image}
                     alt="Profile"
                     className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700"
                 />
