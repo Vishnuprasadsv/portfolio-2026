@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import logo from '../assets/logo.PNG';
 
 const Navbar = () => {
   return (
@@ -10,7 +11,7 @@ const Navbar = () => {
     >
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <img src="/src/assets/logo.PNG" alt="Vishnu.Dev Logo" className="h-10 w-auto object-contain" />
+        <img src={logo} alt="Vishnu.Dev Logo" className="h-10 w-auto object-contain" />
         <h1 className="font-display font-bold text-2xl tracking-wider uppercase">
           <span className="text-white">VISHNU</span> <span className="text-primary neon-text">PRASAD</span>
         </h1>
