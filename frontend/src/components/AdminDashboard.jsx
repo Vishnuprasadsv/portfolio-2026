@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { LayoutDashboard, User, Share2, Code, Briefcase, Award, MessageSquare, LogOut, Upload, Image as ImageIcon, FileText, Plus, Edit2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, User, Share2, Code, Briefcase, Award, MessageSquare, LogOut, Upload, Image as ImageIcon, FileText, Plus, Edit2, Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('profile');
     const [profileData, setProfileData] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
 
@@ -477,9 +478,34 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-background text-text-primary flex">
+        <div className="min-h-screen bg-background text-text-primary flex relative">
+            {/* Mobile Menu Button */}
+            <button
+                className="lg:hidden fixed top-4 right-4 z-50 p-2 bg-surface/80 backdrop-blur-md border border-white/10 rounded-lg text-white shadow-lg"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Mobile Overlay */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Sidebar */}
-            <aside className="w-64 bg-surface border-r border-white/5 p-6 flex flex-col">
+            <aside className={`
+                fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-white/5 p-6 flex flex-col transition-transform duration-300 ease-in-out
+                ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+                lg:translate-x-0 lg:static lg:block
+            `}>
                 <div className="mb-10 flex items-center gap-3">
                     <LayoutDashboard className="text-primary" />
                     <h1 className="font-display font-bold text-xl">Admin Panel</h1>
@@ -489,7 +515,10 @@ const AdminDashboard = () => {
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
+                            onClick={() => {
+                                setActiveTab(tab.id);
+                                setIsMobileMenuOpen(false);
+                            }}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === tab.id
                                 ? 'bg-primary/10 text-primary'
                                 : 'text-text-secondary hover:text-white hover:bg-white/5'
@@ -513,7 +542,7 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-8 overflow-y-auto h-screen">
+            <main className="flex-1 p-4 lg:p-8 overflow-y-auto h-screen w-full pt-16 lg:pt-8">
                 <header className="mb-8">
                     <h2 className="text-2xl font-bold font-display text-white capitalize">{activeTab === 'cv-casestudies' ? 'CV & Case Studies' : activeTab + ' Management'}</h2>
                     <p className="text-text-secondary text-sm mt-1">Manage your {activeTab === 'cv-casestudies' ? 'CV and Case Studies' : activeTab} content here.</p>
@@ -562,16 +591,16 @@ const AdminDashboard = () => {
                     {activeTab === 'socials' && (
                         <div className="max-w-2xl mx-auto py-8 space-y-6">
                             {['Github', 'Linkedin', 'Email', 'X', 'Instagram'].map((platform) => (
-                                <div key={platform} className="flex items-center gap-4">
+                                <div key={platform} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                                     <label className="w-32 font-bold text-white text-lg">{platform}</label>
-                                    <span className="text-white text-lg">:</span>
+                                    <span className="hidden md:block text-white text-lg">:</span>
                                     <div className="flex-1 flex gap-4">
                                         <input
                                             type="text"
                                             value={socials[platform.toLowerCase()] || ''}
                                             onChange={(e) => setSocials({ ...socials, [platform.toLowerCase()]: e.target.value })}
                                             placeholder={`enter ${platform} ${platform === 'Email' ? 'id' : 'profile url'} here`}
-                                            className="flex-1 bg-black/40 border border-white/10 rounded px-4 py-3 text-text-secondary focus:outline-none focus:border-primary/50 transition-colors"
+                                            className="flex-1 bg-black/40 border border-white/10 rounded px-4 py-3 text-text-secondary focus:outline-none focus:border-primary/50 transition-colors w-full"
                                         />
                                         <button
                                             onClick={() => handleSocialUpdate(platform, socials[platform.toLowerCase()])}
@@ -673,7 +702,7 @@ const AdminDashboard = () => {
                                                 <h4 className="font-bold text-white truncate">{cs.title}</h4>
                                                 <p className="text-xs text-text-secondary line-clamp-2">{cs.description}</p>
                                             </div>
-                                            <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => {
                                                         setEditingCaseStudy(cs);
@@ -692,7 +721,7 @@ const AdminDashboard = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteCaseStudy(cs._id)}
-                                                    className="p-1.5 hover:bg-red-500/10 text-text-secondary hover:text-red-500 rounded"
+                                                    className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded"
                                                 >
                                                     <LogOut size={14} />
                                                 </button>
@@ -712,7 +741,7 @@ const AdminDashboard = () => {
                             {/* Add New Tech Form */}
                             <div className="bg-black/40 border border-white/10 rounded-xl p-6 mb-8">
                                 <h3 className="text-lg font-bold text-white mb-4">Add New Skill</h3>
-                                <div className="flex gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4">
                                     <input
                                         type="text"
                                         value={newTech.name}
@@ -723,7 +752,7 @@ const AdminDashboard = () => {
                                     <button
                                         onClick={handleAddTech}
                                         disabled={!newTech.name}
-                                        className="px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                        className="px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         <Upload size={18} />
                                         Add
@@ -743,7 +772,7 @@ const AdminDashboard = () => {
                                             </div>
                                             <button
                                                 onClick={() => handleDeleteTech(tech._id)}
-                                                className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                                className="p-2 text-red-500 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                                                 title="Delete Skill"
                                             >
                                                 <LogOut size={16} /> {/* Using LogOut as Delete icon proxy or import Trash if available */}
@@ -812,7 +841,7 @@ const AdminDashboard = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteProject(project._id)}
-                                                        className="p-2 hover:bg-red-500/10 text-text-secondary hover:text-red-500 rounded transition-colors"
+                                                        className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded transition-colors"
                                                     >
                                                         <LogOut size={16} />
                                                     </button>
@@ -873,7 +902,7 @@ const AdminDashboard = () => {
                                             <p className="text-sm font-medium text-white/70 mb-2 truncate">{exp.company}</p>
                                             <p className="text-sm text-text-secondary line-clamp-2 break-words">{exp.description}</p>
                                         </div>
-                                        <div className="flex items-start gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex items-start gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => {
                                                     setEditingExperience(exp);
@@ -892,7 +921,7 @@ const AdminDashboard = () => {
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteExperience(exp._id)}
-                                                className="p-2 hover:bg-red-500/10 text-text-secondary hover:text-red-500 rounded transition-colors"
+                                                className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded transition-colors"
                                             >
                                                 <LogOut size={16} />
                                             </button>
@@ -934,7 +963,7 @@ const AdminDashboard = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pb-6 custom-scrollbar">
                                 {testimonials.map((t) => (
                                     <div key={t._id} className="bg-black/20 border border-white/5 rounded-xl p-6 group hover:border-white/20 transition-all relative">
-                                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute top-4 right-4 flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => {
                                                     setEditingTestimonial(t);
@@ -952,7 +981,7 @@ const AdminDashboard = () => {
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteTestimonial(t._id)}
-                                                className="p-1.5 hover:bg-red-500/10 text-text-secondary hover:text-red-500 rounded transition-colors"
+                                                className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded transition-colors"
                                             >
                                                 <LogOut size={16} />
                                             </button>
