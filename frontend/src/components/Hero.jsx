@@ -4,7 +4,7 @@ import { Download, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
-import profile_image from '../assets/profile_photo.jpg'
+import profile_image from '../assets/profile_photo.png'
 
 const Hero = () => {
     const [profile, setProfile] = useState(null);
